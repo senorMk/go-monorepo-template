@@ -8,10 +8,6 @@ A production-ready monorepo template with a **Go** backend:
 - **`deploy/`** — Nginx reverse proxy + VPS Docker Compose
 - **`.github/workflows/`** — GitHub Actions: test the Go API, build & push images to GHCR, deploy via Coolify
 
-> This is the Go counterpart of the original NestJS template. The HTTP contract
-> (routes, request/response shapes, error envelope) is identical, so the web and
-> mobile apps work against either backend unchanged.
-
 ## The API stack
 
 | Concern | Library |
