@@ -1,0 +1,244 @@
+openapi: 3.0.3
+info:
+  title: APP_DISPLAY_NAME API
+  description: APP_DISPLAY_NAME backend API (Go).
+  version: "1.0.0"
+servers:
+  - url: /
+tags:
+  - name: auth
+  - name: profile
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        "200":
+          description: Service healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: ok }
+                  timestamp: { type: string, format: date-time }
+
+  /v1/auth/signup:
+    post:
+      tags: [auth]
+      summary: Register a new account (sends an email confirmation)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/SignupRequest" }
+      responses:
+        "201":
+          description: Account created, email confirmation required
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuthResult" }
+        "409": { $ref: "#/components/responses/Error" }
+        "400": { $ref: "#/components/responses/Error" }
+
+  /v1/auth/signin:
+    post:
+      tags: [auth]
+      summary: Sign in with email and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/SigninRequest" }
+      responses:
+        "200":
+          description: Authenticated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuthResult" }
+        "401": { $ref: "#/components/responses/Error" }
+        "403": { $ref: "#/components/responses/Error" }
+
+  /v1/auth/signout:
+    post:
+      tags: [auth]
+      summary: Revoke all active refresh tokens
+      security: [{ bearerAuth: [] }]
+      responses:
+        "204": { description: Signed out }
+        "401": { $ref: "#/components/responses/Error" }
+
+  /v1/auth/refresh:
+    post:
+      tags: [auth]
+      summary: Rotate a refresh token for a new token pair
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/RefreshRequest" }
+      responses:
+        "200":
+          description: New token pair
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TokenPair" }
+        "401": { $ref: "#/components/responses/Error" }
+
+  /v1/auth/forgot-password:
+    post:
+      tags: [auth]
+      summary: Request a password reset email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ForgotPasswordRequest" }
+      responses:
+        "204": { description: Reset email sent if the account exists }
+
+  /v1/auth/reset-password:
+    post:
+      tags: [auth]
+      summary: Reset a password using a reset token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ResetPasswordRequest" }
+      responses:
+        "204": { description: Password reset }
+        "422": { $ref: "#/components/responses/Error" }
+
+  /v1/auth/confirm-email:
+    post:
+      tags: [auth]
+      summary: Confirm an email address and receive a token pair
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ConfirmEmailRequest" }
+      responses:
+        "200":
+          description: Email confirmed
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SessionResult" }
+        "422": { $ref: "#/components/responses/Error" }
+
+  /v1/profile/me:
+    get:
+      tags: [profile]
+      summary: Get the current user's profile
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200":
+          description: Profile
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/User" }
+        "401": { $ref: "#/components/responses/Error" }
+    patch:
+      tags: [profile]
+      summary: Update the current user's profile
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UpdateProfileRequest" }
+      responses:
+        "200":
+          description: Updated profile
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/User" }
+        "401": { $ref: "#/components/responses/Error" }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    Error:
+      description: Error envelope
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+  schemas:
+    Error:
+      type: object
+      properties:
+        statusCode: { type: integer, example: 400 }
+        error: { type: string, example: BAD_REQUEST }
+        message: { type: string }
+    User:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        email: { type: string, format: email }
+        displayName: { type: string, nullable: true }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    SignupRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string, minLength: 8 }
+        displayName: { type: string, nullable: true }
+    SigninRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string }
+    RefreshRequest:
+      type: object
+      required: [refreshToken]
+      properties:
+        refreshToken: { type: string }
+    ForgotPasswordRequest:
+      type: object
+      required: [email]
+      properties:
+        email: { type: string, format: email }
+    ResetPasswordRequest:
+      type: object
+      required: [token, newPassword]
+      properties:
+        token: { type: string }
+        newPassword: { type: string, minLength: 8 }
+    ConfirmEmailRequest:
+      type: object
+      required: [token]
+      properties:
+        token: { type: string }
+    UpdateProfileRequest:
+      type: object
+      properties:
+        displayName: { type: string, nullable: true }
+    AuthResult:
+      type: object
+      properties:
+        user: { $ref: "#/components/schemas/User" }
+        accessToken: { type: string, nullable: true }
+        refreshToken: { type: string, nullable: true }
+        expiresAt: { type: string, format: date-time, nullable: true }
+        requiresEmailConfirmation: { type: boolean }
+    SessionResult:
+      type: object
+      properties:
+        user: { $ref: "#/components/schemas/User" }
+        accessToken: { type: string }
+        refreshToken: { type: string }
+        expiresAt: { type: string, format: date-time }
+    TokenPair:
+      type: object
+      properties:
+        accessToken: { type: string }
+        refreshToken: { type: string }
+        expiresAt: { type: string, format: date-time }

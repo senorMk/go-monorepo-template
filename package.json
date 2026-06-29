@@ -1,0 +1,13 @@
+{
+  "name": "APP_NAME",
+  "private": true,
+  "workspaces": [
+    "apps/web"
+  ],
+  "scripts": {
+    "api": "cd apps/api && go run ./cmd/api",
+    "build:api": "cd apps/api && go build -ldflags=\"-s -w\" -o bin/api ./cmd/api",
+    "web": "npm run dev --workspace=apps/web",
+    "build:web": "npm run build --workspace=apps/web"
+  }
+}
