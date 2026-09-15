@@ -43,7 +43,7 @@ docker compose up -d
 cp apps/api/.env.example apps/api/.env   # edit secrets
 
 # 6. Start the API and web app
-npm run api   # http://localhost:3000  (migrations run automatically on boot)
+npm run api   # http://localhost:3001  (migrations run automatically on boot)
 npm run web   # http://localhost:4000
 
 # 7. Start the Flutter app
@@ -115,7 +115,7 @@ GET   /v1/profile/me
 PATCH /v1/profile/me
 ```
 
-Swagger UI is available at `http://localhost:3000/docs` in development.
+Swagger UI is available at `http://localhost:3001/docs` in development.
 
 See [`apps/api/README.md`](apps/api/README.md) for API-specific docs (adding
 endpoints, regenerating sqlc, migrations).

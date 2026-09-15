@@ -12,9 +12,9 @@ FROM alpine:3.20 AS runtime
 RUN apk add --no-cache ca-certificates
 WORKDIR /app
 ENV APP_ENV=production
-ENV PORT=3000
+ENV PORT=3001
 
 COPY --from=build /out/api /app/api
 
-EXPOSE 3000
+EXPOSE 3001
 ENTRYPOINT ["/app/api"]

@@ -6,7 +6,7 @@ import compression from 'compression'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const isProduction = process.env.NODE_ENV === 'production'
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 4000
 const base = process.env.BASE || '/'
 
 const app = express()

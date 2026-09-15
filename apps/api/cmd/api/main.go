@@ -12,6 +12,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/joho/godotenv"
 	"github.com/GITHUB_USERNAME/APP_NAME/internal/config"
 	"github.com/GITHUB_USERNAME/APP_NAME/internal/db"
 	"github.com/GITHUB_USERNAME/APP_NAME/internal/server"
@@ -25,6 +26,10 @@ func main() {
 }
 
 func run() error {
+	// Local DX only: load apps/api/.env if present. Real env wins
+	// (Load does not override), missing file is ignored (prod/Coolify).
+	_ = godotenv.Load()
+
 	cfg, err := config.Load()
 	if err != nil {
 		return err
