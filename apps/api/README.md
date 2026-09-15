@@ -10,7 +10,7 @@ Stack: **chi** (router) · **pgx** + **sqlc** (Postgres) · **golang-migrate**
 
 ```bash
 cp .env.example .env          # set DATABASE_URL + JWT secrets
-go run ./cmd/api              # http://localhost:3000
+go run ./cmd/api              # http://localhost:3001
 ```
 
 Migrations in `internal/db/migrations` run automatically on boot, so the API is
@@ -52,7 +52,7 @@ internal/
 | Variable | Default | Notes |
 |----------|---------|-------|
 | `APP_ENV` | `development` | `production` disables `/docs` and switches to JSON logs |
-| `PORT` | `3000` | |
+| `PORT` | `3001` | |
 | `DATABASE_URL` | — (required) | `postgresql://user:pass@host:5432/db` |
 | `JWT_SECRET` | — (required) | HS256 signing secret for access tokens |
 | `JWT_REFRESH_SECRET` | — | reserved for future use |

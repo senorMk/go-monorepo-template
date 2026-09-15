@@ -16,7 +16,7 @@ const minJWTSecretLen = 32
 // Config holds all runtime configuration, populated from environment variables.
 type Config struct {
 	Env  string `env:"APP_ENV" envDefault:"development"`
-	Port int    `env:"PORT" envDefault:"3000"`
+	Port int    `env:"PORT" envDefault:"3001"`
 
 	DatabaseURL string `env:"DATABASE_URL,required"`
 
