@@ -1,6 +1,12 @@
 FROM node:22-alpine AS build
 WORKDIR /app
 
+# Baked into the bundle at build time (Vite reads it during `vite build`).
+# Production builds must pass --build-arg VITE_API_URL=https://api.APP_DOMAIN
+# or the app falls back to http://localhost:3001 and browsers block the calls.
+ARG VITE_API_URL=http://localhost:3001
+ENV VITE_API_URL=$VITE_API_URL
+
 COPY package*.json ./
 COPY apps/web/package*.json ./apps/web/
 RUN npm ci

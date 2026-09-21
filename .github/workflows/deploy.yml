@@ -63,6 +63,8 @@ jobs:
           context: .
           file: apps/web/Dockerfile
           push: true
+          build-args: |
+            VITE_API_URL=https://api.APP_DOMAIN
           tags: |
             ghcr.io/GITHUB_USERNAME/APP_NAME-web:dev
             ghcr.io/GITHUB_USERNAME/APP_NAME-web:${{ github.sha }}
