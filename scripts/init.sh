@@ -33,6 +33,7 @@ if [[ -z "$APP_DOMAIN" ]]; then echo -e "${RED}Domain is required.${NC}"; exit 1
 
 read -rp "$(echo -e "${CYAN}GitHub username${NC} (e.g. johndoe): ")" GITHUB_USERNAME
 if [[ -z "$GITHUB_USERNAME" ]]; then echo -e "${RED}GitHub username is required.${NC}"; exit 1; fi
+GITHUB_USERNAME="$(printf '%s' "$GITHUB_USERNAME" | tr '[:upper:]' '[:lower:]')"
 
 # -- Derived values --
 # snake_case from kebab-case  (my-app -> my_app)
