@@ -122,8 +122,8 @@ endpoints, regenerating sqlc, migrations).
 
 ## Deploying
 
-1. Add secrets to your GitHub repo: `COOLIFY_WEBHOOK_URL`
+1. Add secrets to your GitHub repo: `COOLIFY_WEBHOOK_URL` and, when the webhook requires authentication, `COOLIFY_TOKEN`
 2. Push to `main` — GitHub Actions tests the Go API, then builds and pushes Docker images to GHCR
-3. Coolify picks up the webhook and redeploys
+3. Coolify picks up the webhook and redeploys. The workflow sends `COOLIFY_TOKEN` as an `Authorization: Bearer` header.
 
 For VPS (without Coolify), use `deploy/docker-compose.vps.yml` directly.
