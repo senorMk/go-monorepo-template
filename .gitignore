@@ -55,6 +55,7 @@ app.*.map.json
 # Node / npm
 node_modules/
 dist/
+apps/web/server.js
 .next/
 .nuxt/
 
