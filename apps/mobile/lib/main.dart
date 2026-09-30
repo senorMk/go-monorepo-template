@@ -21,7 +21,6 @@ void main() async {
     await FlutterDisplayMode.setHighRefreshRate();
   }
 
-  final appDir = await getApplicationDocumentsDirectory();
   final tmpDir = await getTemporaryDirectory();
   HydratedBloc.storage = await HydratedStorage.build(storageDirectory: tmpDir);
 

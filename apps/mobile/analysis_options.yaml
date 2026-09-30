@@ -1,1 +1,6 @@
 include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  errors:
+    # APP_SNAKE is replaced with a valid package name by scripts/init.sh.
+    package_names: ignore

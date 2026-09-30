@@ -6,7 +6,7 @@ A production-ready monorepo template with a **Go** backend:
 - **`apps/web`** — React 19 + Vite SSR + Tailwind 4 (landing page, Terms, Privacy)
 - **`apps/mobile`** — Flutter (BLoC architecture, light/dark themes, auth-ready)
 - **`deploy/`** — Nginx reverse proxy + VPS Docker Compose
-- **`.github/workflows/`** — GitHub Actions: test the Go API, build & push images to GHCR, deploy via Coolify
+- **`.github/workflows/`** — GitHub Actions: check Go, web, and Flutter on pull requests; build & push images to GHCR and deploy via Coolify on `main`
 
 ## The API stack
 
@@ -119,6 +119,18 @@ Swagger UI is available at `http://localhost:3001/docs` in development.
 
 See [`apps/api/README.md`](apps/api/README.md) for API-specific docs (adding
 endpoints, regenerating sqlc, migrations).
+
+## Pull request checks
+
+CI verifies the Go module, vets and builds the API, and runs its tests with the
+race detector against a temporary PostgreSQL database. It also typechecks and
+builds the web app, then analyzes and tests the Flutter app. The root
+`package-lock.json` and mobile `pubspec.lock` keep dependency installs repeatable.
+
+To run the API integration test locally, point `TEST_DATABASE_URL` at a
+disposable PostgreSQL database and run `go test ./...` from `apps/api`. The test
+applies migrations and removes its test user. Without that variable it skips
+the database test; CI always supplies it.
 
 ## Deploying
 

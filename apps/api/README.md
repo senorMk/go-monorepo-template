@@ -27,6 +27,10 @@ make sqlc         # regenerate the query layer
 make migrate-up   # apply migrations with the CLI (DB_URL=...)
 ```
 
+The auth integration test needs a disposable PostgreSQL database. Set
+`TEST_DATABASE_URL` before `go test ./...`; otherwise that test is skipped.
+CI runs it against a PostgreSQL service with `go test -race ./...`.
+
 ## Layout
 
 ```
